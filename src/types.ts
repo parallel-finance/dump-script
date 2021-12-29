@@ -2,7 +2,7 @@ import { ParaId } from '@polkadot/types/interfaces'
 import { PolkadotRuntimeCommonCrowdloanFundInfo } from '@polkadot/types/lookup'
 import BN from 'bn.js'
 import { BN_ZERO } from '@polkadot/util'
-import { Enum, Struct, u128, u32 } from '@polkadot/types';
+import { Enum, Struct, u128, u32 } from '@polkadot/types'
 
 export interface VaultPhase extends Enum {
     readonly Pending: u32;
@@ -38,8 +38,20 @@ export interface Vault extends Struct {
     readonly trieIndex: u32,
 }
 
-export interface VaultInfo {
+export interface ValidVaultData {
+    paraId: ParaId;
+    ctoken: BN;
+    isCrowdloan: boolean;
+    contributed: BN;
+    pending: BN;
+}
+
+export interface VaultInfo extends ValidVaultData{
     info: Vault;
+}
+
+export interface VaultInfos {
+    vaults: VaultInfo[];
 }
 
 export interface WinnerData {
