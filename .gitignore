@@ -1,0 +1,7 @@
+.yarn
+dist/
+node_modules/
+logs/
+data/
+yarn-error.log
+parallel-*
