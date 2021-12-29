@@ -11,7 +11,7 @@ export namespace Api {
       logger.debug(`connected endpoint: ${paraEndpoint}`)
       paraApi = await ApiPromise.create(
         { provider: new WsProvider(paraEndpoint) } as ApiOptions
-    )
+      )
     }
     if (relayerEndpoint) {
       logger.debug(`connected endpoint: ${relayerEndpoint}`)

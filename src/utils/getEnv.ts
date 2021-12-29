@@ -10,11 +10,11 @@ export const getStringEnv = (envName: string): string => {
 }
 
 export const getStringOrUndefinedEnv = (envName: string, must?: boolean): string | undefined => {
-    const value = process.env[envName]
-    if (!value && must) {
-      throw new Error(`Configuration ${envName} is not specified`)
-    }
-    return value
+  const value = process.env[envName]
+  if (!value && must) {
+    throw new Error(`Configuration ${envName} is not specified`)
+  }
+  return value
 }
 
 export const getNumEnv = (envName: string): number => {
