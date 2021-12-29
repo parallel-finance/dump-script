@@ -7,7 +7,7 @@ export function createChildKey (trieIndex: u32) {
     u8aConcat(
       ':child_storage:default:',
       blake2AsU8a(
-        u8aConcat('crowdloan', trieIndex.toU8a())
+        u8aConcat('crowdloans', trieIndex.toU8a())
       )
     )
   )
