@@ -4,6 +4,40 @@ import BN from 'bn.js'
 import { BN_ZERO } from '@polkadot/util'
 import { Enum, Struct, u128, u32 } from '@polkadot/types'
 
+export interface WinnerData {
+    accountId: string;
+    firstSlot: BN;
+    isCrowdloan: boolean;
+    key: string;
+    lastSlot: BN;
+    paraId: ParaId;
+    value: BN;
+}
+
+export interface Campaign extends WinnerData {
+    info: PolkadotRuntimeCommonCrowdloanFundInfo;
+    isCapped?: boolean;
+    isEnded?: boolean;
+    isWinner?: boolean;
+}
+
+export interface Campaigns {
+    activeCap: BN;
+    activeRaised: BN;
+    funds: Campaign[] | null;
+    totalCap: BN;
+    totalRaised: BN;
+}
+
+export const EMPTY: Campaigns = {
+  activeCap: BN_ZERO,
+  activeRaised: BN_ZERO,
+  funds: null,
+  totalCap: BN_ZERO,
+  totalRaised: BN_ZERO
+}
+
+
 export interface VaultPhase extends Enum {
     readonly Pending: u32;
     readonly Contributing: u32;
@@ -54,35 +88,9 @@ export interface VaultInfos {
     vaults: VaultInfo[];
 }
 
-export interface WinnerData {
-    accountId: string;
-    firstSlot: BN;
-    isCrowdloan: boolean;
-    key: string;
-    lastSlot: BN;
-    paraId: ParaId;
-    value: BN;
-}
-
-export interface Campaign extends WinnerData {
-    info: PolkadotRuntimeCommonCrowdloanFundInfo;
-    isCapped?: boolean;
-    isEnded?: boolean;
-    isWinner?: boolean;
-}
-
-export interface Campaigns {
-    activeCap: BN;
-    activeRaised: BN;
-    funds: Campaign[] | null;
-    totalCap: BN;
-    totalRaised: BN;
-}
-
-export const EMPTY: Campaigns = {
-  activeCap: BN_ZERO,
-  activeRaised: BN_ZERO,
-  funds: null,
-  totalCap: BN_ZERO,
-  totalRaised: BN_ZERO
+export enum ChildStorageKind {
+    Pending = 'pending',
+    Flying = 'flying',
+    Contributed = 'contributed',
+    Default = '',
 }

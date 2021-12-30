@@ -1,7 +1,7 @@
 import { Api, paraApi } from './utils/api'
 import { ParaId } from '@polkadot/types/interfaces'
 import * as fs from 'fs'
-import { VaultInfo } from './types'
+import { ChildStorageKind, VaultInfo } from './types'
 import { logger } from './utils/logger'
 import { SUBSTRATE_SS58_PREFIX } from './utils/constants'
 import { fetchVault } from './query'
@@ -41,8 +41,8 @@ export class Service {
 
       const trieIndex = paraApi.createType('u32', vaultsInfo[0].info.trieIndex)
 
-      const pendingChildKeys = createVaultChildKey(trieIndex, true)
-      const contributedChildKeys = createVaultChildKey(trieIndex, false)
+      const pendingChildKeys = createVaultChildKey(trieIndex, ChildStorageKind.Pending)
+      const contributedChildKeys = createVaultChildKey(trieIndex, ChildStorageKind.Default)
       logger.debug(`pendingKeys: ${pendingChildKeys}`)
       logger.debug(`contributedKeys: ${contributedChildKeys}`)
 
