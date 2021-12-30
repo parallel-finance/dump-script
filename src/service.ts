@@ -52,7 +52,7 @@ export class Service {
       const ss58Keys = keys.map(
         k => encodeAddress(k, parseInt(process.env.SS58_PREFIX || SUBSTRATE_SS58_PREFIX))
       )
-      const values = await Promise.all(ss58Keys.map(
+      const values = await Promise.all(keys.map(
         k => paraApi.rpc.childstate.getStorage(childKeys, k))
       )
       const contributions = values.map((v, idx) => ({
