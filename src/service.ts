@@ -14,17 +14,20 @@ interface ApiServiceConfig {
     relayEndpoint: string | undefined;
     dumpPath: string;
     paraId: number;
+    paraSS58Prefix: number;
 }
 
 export class Service {
     static dumpPath: string
     static paraId: number
+    static paraSS58Prefix: number
     static async build (
-      { paraEndpoint, relayEndpoint, dumpPath, paraId }: ApiServiceConfig
+      { paraEndpoint, relayEndpoint, dumpPath, paraId, paraSS58Prefix }: ApiServiceConfig
     ) {
       await Api.init(paraEndpoint, relayEndpoint)
       this.dumpPath = dumpPath
       this.paraId = paraId
+      this.paraSS58Prefix = paraSS58Prefix
       return new Service()
     }
 
@@ -50,7 +53,7 @@ export class Service {
     public async processChildKey (childKeys: string | Uint8Array, filename: string) {
       const keys = await paraApi.rpc.childstate.getKeys(childKeys, '0x')
       const ss58Keys = keys.map(
-        k => encodeAddress(k, parseInt(process.env.SS58_PREFIX || SUBSTRATE_SS58_PREFIX))
+        k => encodeAddress(k, Service.paraSS58Prefix)
       )
       const values = await Promise.all(keys.map(
         k => paraApi.rpc.childstate.getStorage(childKeys, k))
