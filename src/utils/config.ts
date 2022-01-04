@@ -1,15 +1,15 @@
 import { getNumEnv, getStringEnv, getStringOrUndefinedEnv } from './getEnv'
 
 interface SubstrateConfig {
-    paraEndpoint: string
-    relayEndpoint: string | undefined
-    paraSS58Prefix: number
+  paraEndpoint: string
+  relayEndpoint: string | undefined
+  paraSS58Prefix: number
 }
 
 interface Config {
-    substrate: SubstrateConfig;
-    paraId: number;
-    dumpPath: string,
+  substrate: SubstrateConfig
+  paraId: number
+  dumpPath: string
 }
 
 const getConfig = (): Config => ({

@@ -25,7 +25,7 @@ export class Service {
     relayEndpoint,
     dumpPath,
     paraId,
-    paraSS58Prefix,
+    paraSS58Prefix
   }: ApiServiceConfig) {
     await Api.init(paraEndpoint, relayEndpoint)
     this.dumpPath = dumpPath
@@ -39,46 +39,35 @@ export class Service {
 
     // TODO: Try to get multiple-vaults
     const valut = await fetchVault(paraId, 0)
-    const vaultsInfo: VaultInfo[] = await parseVault([
-      [[paraId as unknown as ParaId]],
-      [valut],
-    ])
+    const vaultsInfo: VaultInfo[] = await parseVault([[[paraId as unknown as ParaId]], [valut]])
     logger.debug(`Found valuts count: ${vaultsInfo.length}`)
 
     const trieIndex = paraApi.createType('u32', vaultsInfo[0].info.trieIndex)
 
-    const pendingChildKeys = createVaultChildKey(
-      trieIndex,
-      ChildStorageKind.Pending
-    )
-    const contributedChildKeys = createVaultChildKey(
-      trieIndex,
-      ChildStorageKind.Default
-    )
+    const pendingChildKeys = createVaultChildKey(trieIndex, ChildStorageKind.Pending)
+    const flyingChildKeys = createVaultChildKey(trieIndex, ChildStorageKind.Flying)
+    const contributedChildKeys = createVaultChildKey(trieIndex, ChildStorageKind.Contributed)
+    logger.debug(`flyingKeys: ${flyingChildKeys}`)
     logger.debug(`pendingKeys: ${pendingChildKeys}`)
     logger.debug(`contributedKeys: ${contributedChildKeys}`)
 
+    await this.processChildKey(flyingChildKeys, 'flying.json')
     await this.processChildKey(pendingChildKeys, 'pending.json')
     await this.processChildKey(contributedChildKeys, 'contributed.json')
   }
 
-  public async processChildKey(
-    childKeys: string | Uint8Array,
-    filename: string
-  ) {
+  public async processChildKey(childKeys: string | Uint8Array, filename: string) {
     const keys = await paraApi.rpc.childstate.getKeys(childKeys, '0x')
-    const ss58Keys = keys.map((k) => encodeAddress(k, Service.paraSS58Prefix))
-    const values = await Promise.all(
-      keys.map((k) => paraApi.rpc.childstate.getStorage(childKeys, k))
-    )
+    const ss58Keys = keys.map(k => encodeAddress(k, Service.paraSS58Prefix))
+    const values = await Promise.all(keys.map(k => paraApi.rpc.childstate.getStorage(childKeys, k)))
     const contributions = values.map((v, idx) => ({
       from: ss58Keys[idx],
-      data: paraApi.createType('(Balance, Vec<u8>)', v.unwrap()).toJSON(),
+      data: paraApi.createType('(Balance, Vec<u8>)', v.unwrap()).toJSON()
     }))
     logger.debug(`contributions.len = ${contributions.length}`)
     const jsonStr = JSON.stringify(contributions, undefined, 2)
-    fs.writeFileSync(Service.dumpPath + filename, jsonStr, {
-      encoding: 'utf-8',
+    fs.writeFileSync(Service.dumpPath + '/' + filename, jsonStr, {
+      encoding: 'utf-8'
     })
   }
 }

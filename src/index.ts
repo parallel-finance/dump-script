@@ -13,16 +13,16 @@ async function main() {
     relayEndpoint: undefined,
     dumpPath: dumpPath || './',
     paraId: paraId || 2085,
-    paraSS58Prefix: substrate.paraSS58Prefix || SUBSTRATE_SS58_PREFIX,
+    paraSS58Prefix: substrate.paraSS58Prefix || SUBSTRATE_SS58_PREFIX
   })
   await service.run()
 }
 
 main()
   .then(() => process.exit(0))
-  .catch((e) => {
+  .catch(e => {
     logger.error(e.message)
     process.exit(1)
   })
 
-process.on('unhandledRejection', (err) => logger.error(err))
+process.on('unhandledRejection', err => logger.error(err))
