@@ -38,6 +38,6 @@ jobs:
         with:
           file: Dockerfile.release
           push: true
-          tags: ${{ secrets.DOCKERHUB_REPO }}:${{ steps.docker_tag.outputs.value }}
+          tags: ${{ secrets.DOCKERHUB_ORGNAME }}/dump-script:${{ steps.docker_tag.outputs.value }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
