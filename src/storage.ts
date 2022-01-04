@@ -13,7 +13,7 @@ export function createChildKey(trieIndex: u32) {
 // Follow https://github.com/parallel-finance/parallel/blob/master/pallets/crowdloans/src/lib.rs#L868
 export function createVaultChildKey(trieIndex: u32, kind: ChildStorageKind) {
   const prefix = 'crowdloan:' + kind.valueOf()
-  logger.debug(`prefix: ${prefix}`)
+  // logger.debug(`childstorage prefix: ${prefix}`)
 
   return u8aToHex(
     u8aConcat(':child_storage:default:', blake2AsU8a(u8aConcat(prefix, trieIndex.toU8a())))

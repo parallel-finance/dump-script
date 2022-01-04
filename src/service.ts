@@ -64,7 +64,7 @@ export class Service {
       from: ss58Keys[idx],
       data: paraApi.createType('(Balance, Vec<u8>)', v.unwrap()).toJSON()
     }))
-    logger.debug(`contributions.len = ${contributions.length}`)
+    logger.debug(`${filename.split('.')[0]}.len = ${contributions.length}`)
     const jsonStr = JSON.stringify(contributions, undefined, 2)
     fs.writeFileSync(Service.dumpPath + '/' + filename, jsonStr, {
       encoding: 'utf-8'
