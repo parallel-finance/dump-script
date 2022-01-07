@@ -7,39 +7,36 @@ import { fetchVault } from './query'
 import { parseVault } from './parser'
 import { createVaultChildKey } from './storage'
 import { encodeAddress } from '@polkadot/util-crypto'
+import getConfig from './utils/config'
+
+const { vaultConfig } = getConfig()
 
 interface ApiServiceConfig {
   paraEndpoint: string
   relayEndpoint: string | undefined
   dumpPath: string
-  paraId: number
   paraSS58Prefix: number
 }
 
 export class Service {
   static dumpPath: string
-  static paraId: number
   static paraSS58Prefix: number
   static async build({
     paraEndpoint,
     relayEndpoint,
     dumpPath,
-    paraId,
     paraSS58Prefix
   }: ApiServiceConfig) {
     await Api.init(paraEndpoint, relayEndpoint)
     this.dumpPath = dumpPath
-    this.paraId = paraId
     this.paraSS58Prefix = paraSS58Prefix
     return new Service()
   }
 
   public async run() {
-    const paraId = Service.paraId
-
     // TODO: Try to get multiple-vaults
-    const valut = await fetchVault(paraId, 0)
-    const vaultsInfo: VaultInfo[] = await parseVault([[[paraId as unknown as ParaId]], [valut]])
+    const valut = await fetchVault(vaultConfig.paraId, vaultConfig.leaseStart, vaultConfig.leaseEnd)
+    const vaultsInfo: VaultInfo[] = await parseVault([[[vaultConfig.paraId as unknown as ParaId]], [valut]])
     logger.debug(`Found valuts count: ${vaultsInfo.length}`)
 
     const trieIndex = paraApi.createType('u32', vaultsInfo[0].info.trieIndex)
