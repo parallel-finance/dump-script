@@ -6,7 +6,7 @@ export let paraApi: ApiPromise
 export let relayApi: ApiPromise
 
 export namespace Api {
-  export async function init(paraEndpoint?: string, relayerEndpoint?: string) {
+  export async function init (paraEndpoint?: string, relayerEndpoint?: string) {
     if (paraEndpoint) {
       logger.debug(`connected endpoint: ${paraEndpoint}`)
       paraApi = await ApiPromise.create({ provider: new WsProvider(paraEndpoint) } as ApiOptions)

@@ -27,7 +27,7 @@ const getConfig = (): Config => ({
   vaultConfig: {
     paraId: getNumEnv('PARAID'),
     leaseStart: getNumEnv('LEASE_START'),
-    leaseEnd: getNumEnv('LEASE_END'),
+    leaseEnd: getNumEnv('LEASE_END')
   },
   dumpPath: getStringEnv('DUMP_PATH')
 })

@@ -6,7 +6,7 @@ import { LOCAL_ENPOINT, SUBSTRATE_SS58_PREFIX } from './utils/constants'
 
 dotenv.config()
 
-async function main() {
+async function main () {
   const { substrate, dumpPath } = getConfig()
   const service = await Service.build({
     paraEndpoint: substrate.paraEndpoint || LOCAL_ENPOINT,

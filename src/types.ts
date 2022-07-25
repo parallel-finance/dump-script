@@ -88,7 +88,10 @@ export interface VaultInfos {
 }
 
 export enum ChildStorageKind {
+  // eslint-disable-next-line
   Pending = 'pending',
+  // eslint-disable-next-line
   Flying = 'flying',
+  // eslint-disable-next-line
   Contributed = 'contributed'
 }

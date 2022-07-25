@@ -21,7 +21,7 @@ interface ApiServiceConfig {
 export class Service {
   static dumpPath: string
   static paraSS58Prefix: number
-  static async build({
+  static async build ({
     paraEndpoint,
     relayEndpoint,
     dumpPath,
@@ -33,7 +33,7 @@ export class Service {
     return new Service()
   }
 
-  public async run() {
+  public async run () {
     // TODO: Try to get multiple-vaults
     const valut = await fetchVault(vaultConfig.paraId, vaultConfig.leaseStart, vaultConfig.leaseEnd)
     const vaultsInfo: VaultInfo[] = await parseVault([[[vaultConfig.paraId as unknown as ParaId]], [valut]])
@@ -53,7 +53,7 @@ export class Service {
     await this.processChildKey(contributedChildKeys, 'contributed.json')
   }
 
-  public async processChildKey(childKeys: string | Uint8Array, filename: string) {
+  public async processChildKey (childKeys: string | Uint8Array, filename: string) {
     const keys = await paraApi.rpc.childstate.getKeys(childKeys, '0x')
     const ss58Keys = keys.map(k => encodeAddress(k, Service.paraSS58Prefix))
     const values = await Promise.all(keys.map(k => paraApi.rpc.childstate.getStorage(childKeys, k)))
@@ -62,6 +62,13 @@ export class Service {
       data: paraApi.createType('(Balance, Vec<u8>)', v.unwrap()).toJSON()
     }))
     logger.debug(`${filename.split('.')[0]}.len = ${contributions.length}`)
+    let totalAmount = BigInt(0)
+    contributions.forEach((item) => {
+      const amount = Number((item.data as unknown as [number, string])[0])
+      // logger.debug(`amount is ${amount}`)
+      totalAmount = totalAmount + BigInt(amount)
+    })
+    logger.debug(`total amount is ${totalAmount}`)
     const jsonStr = JSON.stringify(contributions, undefined, 2)
     fs.writeFileSync(Service.dumpPath + '/' + filename, jsonStr, {
       encoding: 'utf-8'

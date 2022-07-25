@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node src/index.ts",
+    "start2": "ts-node src/main.ts",
     "build": "tsc",
     "clean": "tsc --build --clean",
     "lint": "eslint . --ext .ts",
