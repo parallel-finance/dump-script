@@ -4,6 +4,7 @@ interface SubstrateConfig {
   paraEndpoint: string
   relayEndpoint: string | undefined
   paraSS58Prefix: number
+  blockHeight: number
 }
 
 interface VaultInterface {
@@ -22,7 +23,8 @@ const getConfig = (): Config => ({
   substrate: {
     paraEndpoint: getStringEnv('PARA_ENDPOINT'),
     relayEndpoint: getStringOrUndefinedEnv('RELAY_ENDPOINT', false),
-    paraSS58Prefix: getNumEnv('PARA_SS58_PREFIX')
+    paraSS58Prefix: getNumEnv('PARA_SS58_PREFIX'),
+    blockHeight: getNumEnv('BLOCK_HEIGHT') || 0
   },
   vaultConfig: {
     paraId: getNumEnv('PARAID'),
