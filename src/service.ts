@@ -38,13 +38,12 @@ export class Service {
   }
 
   public async run () {
-    const blockHeight = Service.blockHeight || await paraApi.query.system.number()
+    const blockHeight =
+      Service.blockHeight || (await paraApi.query.system.number())
     const at = (await paraApi.rpc.chain.getBlockHash(blockHeight)).toString()
 
     if (at) {
-      logger.debug(
-        `Fetch data from block #${blockHeight}, block hash: ${at}`
-      )
+      logger.debug(`Fetch data from block #${blockHeight}, block hash: ${at}`)
     }
 
     // TODO: Try to get multiple-vaults
@@ -53,6 +52,10 @@ export class Service {
       vaultConfig.leaseStart,
       vaultConfig.leaseEnd
     )
+    if (!vault) {
+      logger.error('Run script failed')
+      return
+    }
     const vaultsInfo: VaultInfo[] = await parseVault([
       [[vaultConfig.paraId as unknown as ParaId]],
       [vault]
@@ -90,9 +93,7 @@ export class Service {
     const keys = await paraApi.rpc.childstate.getKeys(childKeys, '0x', at)
     const ss58Keys = keys.map((k) => encodeAddress(k, Service.paraSS58Prefix))
     const values = await Promise.all(
-      keys.map((k) =>
-        paraApi.rpc.childstate.getStorage(childKeys, k, at)
-      )
+      keys.map((k) => paraApi.rpc.childstate.getStorage(childKeys, k, at))
     )
     const contributions = values.map((v, idx) => ({
       from: ss58Keys[idx],
