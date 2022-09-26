@@ -10,11 +10,13 @@ export const fetchCrowdloan = async (paraId: number, at?: string): Promise<Crowd
   return fund.toJSON() as unknown as CrowdloanFundInfo
 }
 
-export const fetchVault = async (paraId: number, leaseStart: number, leaseEnd: number): Promise<Vault> => {
+export const fetchVault = async (paraId: number, leaseStart: number, leaseEnd: number): Promise<Vault | undefined> => {
   const vault = await paraApi.query.crowdloans.vaults(paraId, leaseStart, leaseEnd)
 
-  if (!vault) logger.error(`Failed to fetch crowdloan ${paraId}`)
-
+  if (vault.isEmpty) {
+    logger.error(`Failed to fetch crowdloan ${paraId}`)
+    return undefined
+  }
   const vaultData = vault.toJSON() as unknown as Vault
   logger.info(`Fetched vault ${paraId}: ${JSON.stringify(vaultData, null, 2)}`)
   console.log({
